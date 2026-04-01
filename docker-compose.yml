@@ -1,0 +1,19 @@
+services:
+  sensor-service:
+    build: .
+    ports:
+      - "8000:8000"
+    restart: always
+
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:latest
+    ports:
+      - "8428:8428"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "-promscrape.config=/etc/prometheus/prometheus.yml"
+      - "-promscrape.config.strictParse=false"
+      - "-retentionPeriod=1d"
+      - "-storageDataPath=/victoria-metrics-data"
+    restart: always
